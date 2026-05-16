@@ -1,48 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
+using MyApi.Backend.Models;
 using MyApi.Backend.DTOs;
 using MyApi.Backend.Services.Interfaces;
 
-namespace MyApi.Backend.Controllers
+namespace MyApi.Backend.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly IAuthService _service;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService service)
         {
-            _authService = authService;
+            _service = service;
         }
 
-        // POST api/auth/register
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto dto)
+        [HttpPost]
+        public async Task<IActionResult> login([FromBody] LoginDto login)
         {
-            try
-            {
-                var result = await _authService.RegisterAsync(dto);
-                return CreatedAtAction(nameof(Register), result);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(new { message = ex.Message });
-            }
+            var user = await _service.LoginService(login);
+            if(user==null) return Unauthorized("Invalid credentials 2");
+            else return Ok(user);
         }
-
-        // POST api/auth/login
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto dto)
-        {
-            try
-            {
-                var result = await _authService.LoginAsync(dto);
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
-        }
+        
     }
 }

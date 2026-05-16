@@ -1,100 +1,51 @@
+using MyApi.Backend.Models;
 using MyApi.Backend.DTOs;
 using MyApi.Backend.Enum;
-using MyApi.Backend.Models;
-using MyApi.Backend.Repositories.Interfaces;
+using MyApi.Backend.Repository.Interface;
 using MyApi.Backend.Services.Interfaces;
-
-namespace MyApi.Backend.Services
+namespace MyApi.Backend.Service
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepo;
+        private readonly IUserRepo _userrepository;
 
-        public UserService(IUserRepository userRepo)
+        public UserService(IUserRepo userrepository)
         {
-            _userRepo = userRepo;
+            _userrepository = userrepository;
         }
 
-        public async Task<IEnumerable<UserDto>> GetAllAsync()
+    public async Task<User?> CreateUser(CreateUserDto dto)
         {
-            var users = await _userRepo.GetAllAsync();
-            return users.Select(UserDto.FromEntity);
-        }
-
-        public async Task<UserDto> GetByIdAsync(int id, int requesterId, bool isAdmin)
-        {
-            if (!isAdmin && requesterId != id)
-                throw new UnauthorizedAccessException("Access denied.");
-
-            var user = await _userRepo.GetByIdAsync(id)
-                ?? throw new KeyNotFoundException($"User with ID {id} not found.");
-
-            return UserDto.FromEntity(user);
-        }
-
-        public async Task<UserDto> CreateAsync(CreateUserDto dto)
-        {
-            if (await _userRepo.EmailExistsAsync(dto.Email))
-                throw new InvalidOperationException("Email already in use.");
-
-            var user = new User
+            var newUser = await _userrepository.FindByEmail(dto.Email);
+            if(newUser != null ) return null;
+            else
             {
-                userName     = dto.UserName,
-                userEmail    = dto.Email,
-                userPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                userRole     = dto.Role
-            };
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password); // hashed password generate
+                User user = new User
+                {
+                    userName = dto.UserName,
+                    userEmail = dto.Email,
+                    userPassword = hashedPassword,
+                    userRole = dto.Role == "ADMIN" ? Role.ADMIN : dto.Role == "CLINIC" ? Role.CLINIC : dto.Role == "DOCTOR" ? Role.DOCTOR : Role.RECEPTIONIST,
+                    userGender = dto.UserGender == "MALE" ? Gender.MALE : dto.UserGender == "FEMALE" ? Gender.FEMALE : Gender.OTHER,
+                };
 
-            var created = await _userRepo.CreateAsync(user);
-            return UserDto.FromEntity(created);
-        }
-
-        public async Task<UserDto> UpdateAsync(int id, UpdateUserDto dto, int requesterId, bool isAdmin)
-        {
-            if (!isAdmin && requesterId != id)
-                throw new UnauthorizedAccessException("Access denied.");
-
-            var user = await _userRepo.GetByIdAsync(id)
-                ?? throw new KeyNotFoundException($"User with ID {id} not found.");
-
-            if (!string.IsNullOrWhiteSpace(dto.UserName))
-                user.userName = dto.UserName;
-
-            if (!string.IsNullOrWhiteSpace(dto.Email))
-            {
-                if (await _userRepo.EmailExistsAsync(dto.Email, excludeId: id))
-                    throw new InvalidOperationException("Email already in use.");
-
-                user.userEmail = dto.Email;
+                var userCreated = await _userrepository.CreateUser(user);
+                return userCreated;
             }
-
-            if (!string.IsNullOrWhiteSpace(dto.Password))
-                user.userPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-
-            if (dto.Role.HasValue)
-            {
-                if (!isAdmin)
-                    throw new UnauthorizedAccessException("Only ADMIN can change user roles.");
-
-                user.userRole = dto.Role.Value;
-            }
-
-            var updated = await _userRepo.UpdateAsync(user);
-            return UserDto.FromEntity(updated);
         }
 
-        public async Task DeleteAsync(int id)
+    public async Task<User?> FindById(int id)
         {
-            var user = await _userRepo.GetByIdAsync(id)
-                ?? throw new KeyNotFoundException($"User with ID {id} not found.");
-
-            await _userRepo.DeleteAsync(user);
+            var existUser = await _userrepository.FindById(id);
+            return existUser;
         }
 
-        public async Task<IEnumerable<UserDto>> GetByRoleAsync(Role role)
+    public async Task<List<User>> GetAllUsers()
         {
-            var users = await _userRepo.GetByRoleAsync(role);
-            return users.Select(UserDto.FromEntity);
+            var users = await _userrepository.GetAllUsers();
+            return users;
         }
     }
+
 }

@@ -21,7 +21,7 @@ namespace MyApi.Backend.Models
         public int isPaid { get; set; }
 
         [Column("CREATED_AT")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime createdAt { get; set; }
 
         [ForeignKey("MEDICINE_ID")]
         public Medicine medicine {get;set;}

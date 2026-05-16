@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HeartbeatIcon = () => (
   <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -33,11 +34,27 @@ export default function Login() {
   const [focused, setFocused] = useState(null);
   const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  const navigate = useNavigate();
+
+  const handleLogin = async(e) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
+    }
+    const response = await fetch(`http://localhost:5002/api/auth`,{
+      method:'POST',
+      headers:{'Content-Type':"application/json"},
+      body:JSON.stringify({"email":email,"password":password})
+    })
+
+    if(response.status==200){
+      const user = await response.json();
+      if(user.userRole == 0){ // 0 IS STORED ad admin
+         navigate("/dashboard");
+      }else if(user.userRole == 1){
+        navigate("/reception");
+      }
     }
     setError("");
     setLoading(true);

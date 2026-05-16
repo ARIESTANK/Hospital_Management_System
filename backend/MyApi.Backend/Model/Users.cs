@@ -13,7 +13,7 @@ namespace MyApi.Backend.Models{
         public int userId { get; set; }
 
         [Column("USER_NAME")]
-        public string userName {get;set;}
+        public required string userName {get;set;}
 
         [Column("USER_EMAIL")]
         public required string userEmail{get;set;}
@@ -23,6 +23,9 @@ namespace MyApi.Backend.Models{
 
         [Column("USER_ROLE")]
         public required Role userRole{get;set;}
+
+        [Column("USER_GENDER")]
+        public required Gender userGender {get;set;}
 
     }
 }

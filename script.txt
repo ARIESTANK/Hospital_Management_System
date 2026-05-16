@@ -1,0 +1,189 @@
+Microsoft Windows [Version 10.0.19045.6466]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\User>sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Thu May 14 11:11:16 2026
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+Connected to an idle instance.
+
+SQL> CREATE PLUGGABLE DATABASE hospital_managementADMIN USER pdbadmin IDENTIFIED BY Oracle123FILE_NAME_CONVERT = (    'C:\app\oracle\oradata\XE\pdbseed\',    'C:\app\oracle\oradata\XE\hospital_management\');
+SQL> CREATE PLUGGABLE DATABASE hospital_management
+  2  ADMIN USER pdbadmin IDENTIFIED BY Oracle123
+  3  FILE_NAME_CONVERT = (
+  4      'C:\app\oracle\oradata\XE\pdbseed\',
+  5      'C:\app\oracle\oradata\XE\hospital_management\'
+  6  );
+CREATE PLUGGABLE DATABASE hospital_management
+*
+ERROR at line 1:
+ORA-01034: ORACLE not available
+Process ID: 0
+Session ID: 0 Serial number: 0
+
+
+SQL> CREATE PLUGGABLE DATABASE hospital_management
+  2  ADMIN USER pdbadmin IDENTIFIED BY Oracle123
+  3  FILE_NAME_CONVERT = (
+  4      'C:CONNECT / AS SYSDBA',
+SQL> ^C
+C:\Users\User>sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Thu May 14 11:14:06 2026
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+Connected to an idle instance.
+
+SQL> CONNECT / AS SYSDBA
+Connected to an idle instance.
+SQL> startup;
+ORACLE instance started.
+
+Total System Global Area 6408895936 bytes
+Fixed Size                  9280960 bytes
+Variable Size            1459617792 bytes
+Database Buffers         4932501504 bytes
+Redo Buffers                7495680 bytes
+Database mounted.
+Database opened.
+SQL>
+SQL> CREATE PLUGGABLE DATABASE hospital_management
+  2  ADMIN USER pdbadmin IDENTIFIED BY Oracle123
+  3  FILE_NAME_CONVERT = (
+  4      'C:\app\oracle\oradata\XE\pdbseed\',
+  5      'C:\app\oracle\oradata\XE\hospital_management\'
+  6  );
+CREATE PLUGGABLE DATABASE hospital_management
+*
+ERROR at line 1:
+ORA-65005: missing or invalid file name pattern for file -
+E:\ORACLE\DATABASE\ORADATA\ORACLE\PDBSEED\SYSTEM01.DBF
+
+
+SQL> CREATE PLUGGABLE DATABASE HOSPITAL
+  2  ADMIN USER pdbadmin IDENTIFIED BY Oracle123
+  3  FILE_NAME_CONVERT = (
+  4      'C:\app\oracle\oradata\XE\pdbseed\',
+  5      'C:\app\oracle\oradata\XE\hospital\'
+  6  );
+CREATE PLUGGABLE DATABASE HOSPITAL
+*
+ERROR at line 1:
+ORA-65005: missing or invalid file name pattern for file -
+E:\ORACLE\DATABASE\ORADATA\ORACLE\PDBSEED\SYSTEM01.DBF
+
+
+SQL> CREATE PLUGGABLE DATABASE hospital_management
+  2  ADMIN USER pdbadmin IDENTIFIED BY Oracle123
+  3  FILE_NAME_CONVERT = (
+  4      'E:\ORACLE\DATABASE\ORADATA\ORACLE\PDBSEED\',
+  5      'E:\ORACLE\DATABASE\ORADATA\ORACLE\HOSPITAL_MANAGEMENT\'
+  6  );
+
+Pluggable database created.
+
+SQL> ALTER PLUGGABLE DATABASE hospital_management OPEN;
+
+Pluggable database altered.
+
+SQL> ALTER PLUGGABLE DATABASE hospital_management SAVE STATE;
+
+Pluggable database altered.
+
+SQL> SHOW PDBS;
+
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 ORCLPDB                        MOUNTED
+         4 HOSPITAL_DB                    MOUNTED
+         5 NEWPDB                         MOUNTED
+         8 HOSPITAL_MANAGEMENT            READ WRITE NO
+SQL> ALTER SESSION SET CONTAINER = HOSPITAL_MANAGEMENT;
+
+Session altered.
+
+SQL> SHOW CON_NAME;
+
+CON_NAME
+------------------------------
+HOSPITAL_MANAGEMENT
+SQL> CREATE USER hospitalAdmin IDENTIFIED BY Oracle123;
+
+User created.
+
+SQL> GRANT CONNECT,RESOURCE TO hospitalAdmin;
+
+Grant succeeded.
+
+SQL> ALTER USER hospitalAdmin QUOTA UNLIMITED ON USERS;
+ALTER USER hospitalAdmin QUOTA UNLIMITED ON USERS
+*
+ERROR at line 1:
+ORA-00959: tablespace 'USERS' does not exist
+
+
+SQL> SELECT USERNAME FROM DBA_USERS;
+
+USERNAME
+--------------------------------------------------------------------------------
+SYS
+SYSTEM
+GSMCATUSER
+XS$NULL
+DBSNMP
+APPQOSSYS
+MDDATA
+PDBADMIN
+SYSBACKUP
+REMOTE_SCHEDULER_AGENT
+DBSFWUSER
+
+USERNAME
+--------------------------------------------------------------------------------
+GSMUSER
+GGSYS
+ANONYMOUS
+SYSRAC
+CTXSYS
+OJVMSYS
+SI_INFORMTN_SCHEMA
+DVSYS
+DVF
+AUDSYS
+HOSPITALADMIN
+
+USERNAME
+--------------------------------------------------------------------------------
+DIP
+ORDPLUGINS
+GSMADMIN_INTERNAL
+LBACSYS
+MDSYS
+OLAPSYS
+C##TESTUSER
+SYSKM
+ORDDATA
+OUTLN
+ORACLE_OCM
+
+USERNAME
+--------------------------------------------------------------------------------
+SYS$UMF
+XDB
+SYSDG
+ORDSYS
+WMSYS
+
+38 rows selected.
+
+SQL> ALTER USER hospitalAdmin QUOTA UNLIMITED ON SYSTEM;
+
+User altered.
+
+SQL>

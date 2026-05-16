@@ -16,6 +16,12 @@ namespace MyApi.Backend.Models{
         [Column("PATIENT_NAME")]
         public required string name {get; set;}
 
+        [Column("PATIENT_GENDER")]
+        public required Gender gender {get; set;}
+
+        [Column("PATIENT_AGE")]
+        public required int age {get; set;}
+
         [Column("CASE")]
         public required Case patientCase {get; set;}
 
@@ -23,6 +29,6 @@ namespace MyApi.Backend.Models{
         public required HealthStatus status { get; set;}
 
         [Column("ARRIVAL_DATE")]
-        public required DateTime arrival_date { get; set;}
+        public DateTime arrival_date { get; set;}
     } 
 }

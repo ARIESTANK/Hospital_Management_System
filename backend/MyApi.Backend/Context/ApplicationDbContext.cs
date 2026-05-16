@@ -22,6 +22,22 @@ namespace MyApi.Backend.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Patient>()
+                .Property(p => p.arrival_date)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP"); // Set default value to current date and
+
+            modelBuilder.Entity<PatientRoom>()
+                .Property(p => p.createdAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<Transaction>()
+                .Property(p => p.createdAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<Treatment>()
+                .Property(p => p.createdAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             
         }
     }

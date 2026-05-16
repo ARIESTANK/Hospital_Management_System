@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyApi.Backend.Context;
 using Oracle.EntityFrameworkCore.Metadata;
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace MyApi.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260514050251_databaseCreate;")]
+    partial class databaseCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,17 +66,9 @@ namespace MyApi.Backend.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("patientId"));
 
-                    b.Property<int>("age")
-                        .HasColumnType("NUMBER(10)")
-                        .HasColumnName("PATIENT_AGE");
-
                     b.Property<DateTime>("arrival_date")
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("ARRIVAL_DATE");
-
-                    b.Property<int>("gender")
-                        .HasColumnType("NUMBER(10)")
-                        .HasColumnName("PATIENT_GENDER");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -248,10 +243,6 @@ namespace MyApi.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)")
                         .HasColumnName("USER_EMAIL");
-
-                    b.Property<int>("userGender")
-                        .HasColumnType("NUMBER(10)")
-                        .HasColumnName("USER_GENDER");
 
                     b.Property<string>("userName")
                         .IsRequired()

@@ -24,7 +24,9 @@ namespace MyApi.Backend.DTOs
         public required string UserName { get; set; }
         public required string Email    { get; set; }
         public required string Password { get; set; }
-        public required Role   Role     { get; set; }
+        public required string   Role     { get; set; }
+
+        public required string UserGender { get; set; }
     }
 
     public class UpdateUserDto
@@ -33,5 +35,6 @@ namespace MyApi.Backend.DTOs
         public string? Email    { get; set; }
         public string? Password { get; set; }
         public Role?   Role     { get; set; }   // ADMIN only
+        public Gender? UserGender { get; set; }
     }
 }

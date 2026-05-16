@@ -248,17 +248,21 @@ export default function Patients() {
   const [collapsed, setCollapsed] = useState(false);
   const [activePage, setActivePage] = useState("Patients");
   const [activeTab, setActiveTab] = useState("All");
+  const [mobileOpen,setMobileOpen] = useState(false);
+
 
 
   return (
     <div style={{ minHeight:"100vh", background:"#F1F5F9", fontFamily:"'DM Sans','Segoe UI',sans-serif", display:"flex", padding:"0" }}>
-        <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} activePage={activePage} setActivePage={setActivePage} />
+        <Sidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
       {/* Modals */}
       {showAdd && <AddPatientModal onClose={() => setShowAdd(false)} />}
       {deleteTarget && <DeleteModal patient={deleteTarget} onClose={() => setDeleteTarget(null)} />}
       {viewTarget && <ViewModal patient={viewTarget} onClose={() => setViewTarget(null)} />}
+
       {/* Page top */}
       <div>
+      <TopBar  onMenuClick={() => setMobileOpen(true)} />
       <div style={{ display:"flex", justifyContent:"space-between", background:"white", borderBottom:"1px solid #E5E7EB", padding:"20px 28px", alignItems:"center", }}>
         <div>
           <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"2px" }}>
